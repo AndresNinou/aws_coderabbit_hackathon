@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 import { Button } from "~/components/ui/Button";
 import { ScoreDial } from "~/components/ui/ScoreDial";
 import { EvidenceDrawer } from "~/components/EvidenceDrawer";
+import VulnerabilityReport from "~/components/VulnerabilityReport";
+import { extractReportFromAuditData } from "~/lib/vulnerabilityParser";
 
 export const Route = createFileRoute("/report/$reportId/")({
   component: Report,
@@ -83,6 +85,11 @@ function Report() {
         typeof auditData === "string" ? auditData : auditData.join("\n"),
       )
     : [];
+
+  // Parse structured vulnerability report
+  const structuredReport = auditData
+    ? extractReportFromAuditData(auditData)
+    : null;
 
   // Calculate score based on findings severity
   const criticalCount = auditFindings.filter(
@@ -491,8 +498,18 @@ Focus on the most critical security issues first. Provide detailed analysis and 
             </div>
           )}
 
-          {/* Claude Audit */}
-          {auditData && (
+          {/* Vulnerability Report */}
+          {structuredReport && (
+            <div className="rounded-card border border-stroke bg-bg-elev p-6 shadow-ambient">
+              <h3 className="mb-6 font-heading text-lg font-semibold text-text-primary">
+                AI Vulnerability Assessment Report
+              </h3>
+              <VulnerabilityReport data={structuredReport} />
+            </div>
+          )}
+
+          {/* Claude Audit Raw */}
+          {auditData && !structuredReport && (
             <div className="rounded-card border border-stroke bg-bg-elev p-6 shadow-ambient">
               <h3 className="mb-4 font-heading text-lg font-semibold text-text-primary">
                 Claude Audit Analysis

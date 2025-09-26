@@ -4,6 +4,7 @@ Provides helper functions for common operations like UUID generation,
 timestamp creation, and request information extraction.
 """
 
+import json
 import uuid
 from datetime import datetime, timezone
 from enum import Enum
@@ -344,9 +345,14 @@ async def create_claude_client(options: dict[str, Any] | None = None, cwd: str |
             result = await add_vulnerability(
                 name=args["name"],
                 cause=args["cause"],
-                vuln_type=args["vuln_type"],
-                session_data=SESSION_DATA
+                vuln_type=args["vuln_type"]
             )
+
+            # Store vulnerability in session data for report generation
+            if "vulnerabilities" not in SESSION_DATA:
+                SESSION_DATA["vulnerabilities"] = []
+            SESSION_DATA["vulnerabilities"].append(result["vulnerability"])
+
             return {
                 "content": [
                     {"type": "text", "text": f"✅ Vulnerability added: {result['vulnerability']['name']} ({result['vulnerability']['type']})"}
@@ -359,15 +365,51 @@ async def create_claude_client(options: dict[str, Any] | None = None, cwd: str |
                 ]
             }
 
-    @tool("generate_full_report", "Generate comprehensive vulnerability report", {})
+    @tool("generate_full_report", "Generate comprehensive vulnerability report. Score should be lower (higher risk) when critical vulnerabilities are present - e.g., 10/100 for critical issues, 80/100 for low-risk findings", {
+        "score": int
+    })
     async def claude_generate_report(args: dict[str, Any]) -> dict[str, Any]:
         """Generate a full vulnerability report using the MCP tool interface."""
         try:
-            from app.tools import generate_full_report
-            report = await generate_full_report(SESSION_DATA)
+            vulnerabilities = SESSION_DATA.get("vulnerabilities", [])
+
+            # Generate the markdown report from vulnerabilities
+            if not vulnerabilities:
+                markdown_report = "# Vulnerability Report\n\nNo vulnerabilities found in this session.\n\n```json\n{\"vulnerabilities\": []}\n```"
+            else:
+                # Create markdown report from vulnerabilities
+                report_lines = [
+                    "# Vulnerability Assessment Report",
+                    "",
+                    f"**Total Vulnerabilities:** {len(vulnerabilities)}",
+                    f"**Risk Score:** {args['score']}/100",
+                    "",
+                    "## Vulnerability Details",
+                    "",
+                    "| Name | Cause | Severity |",
+                    "|------|-------|----------|",
+                ]
+
+                for vuln in vulnerabilities:
+                    name = vuln.get("name", "Unknown")
+                    cause = vuln.get("cause", "Not specified").replace("\n", " ")
+                    vuln_type = vuln.get("type", "low").upper()
+                    report_lines.append(f"| {name} | {cause} | {vuln_type} |")
+
+                report_lines.extend([
+                    "",
+                    "## Raw Data",
+                    "",
+                    "```json",
+                    json.dumps({"vulnerabilities": vulnerabilities}, indent=2),
+                    "```"
+                ])
+
+                markdown_report = "\n".join(report_lines)
+
             return {
                 "content": [
-                    {"type": "text", "text": report}
+                    {"type": "text", "text": markdown_report}
                 ]
             }
         except Exception as e:
