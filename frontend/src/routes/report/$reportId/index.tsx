@@ -550,22 +550,6 @@ Focus on the most critical security issues first. Provide detailed analysis and 
           </div>
 
           {/* Links */}
-          <div className="rounded-card border border-stroke bg-bg-elev p-6 shadow-ambient">
-            <div className="flex flex-wrap gap-4">
-              <Link to="/discover">
-                <Button variant="secondary" size="sm">
-                  <FileText className="mr-2 h-4 w-4" />
-                  Bright Data Doc Snippets
-                </Button>
-              </Link>
-              <Link to="/discover">
-                <Button variant="secondary" size="sm">
-                  <ExternalLink className="mr-2 h-4 w-4" />
-                  MCP Discovery
-                </Button>
-              </Link>
-            </div>
-          </div>
         </div>
       </div>
 

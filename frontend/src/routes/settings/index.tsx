@@ -9,7 +9,6 @@ import { useSettingsStore } from "~/stores/settings";
 import toast from "react-hot-toast";
 
 const settingsFormSchema = z.object({
-  brightDataApiKey: z.string(),
   sensoApiKey: z.string(),
 });
 
@@ -29,13 +28,11 @@ function Settings() {
   } = useForm<SettingsFormData>({
     resolver: zodResolver(settingsFormSchema),
     defaultValues: {
-      brightDataApiKey: apiKeys.brightData || "",
       sensoApiKey: apiKeys.senso || "",
     },
   });
 
   const onSubmit = (data: SettingsFormData) => {
-    setApiKey("brightData", data.brightDataApiKey);
     setApiKey("senso", data.sensoApiKey);
 
     toast.success("Settings saved successfully!");
@@ -43,7 +40,6 @@ function Settings() {
 
   const handleSaveIndividual = (key: keyof SettingsFormData, value: string) => {
     const keyMap = {
-      brightDataApiKey: "brightData",
       sensoApiKey: "senso",
     } as const;
 
@@ -63,35 +59,6 @@ function Settings() {
           </div>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Bright Data */}
-            <div className="flex items-end space-x-3">
-              <div className="flex-1">
-                <Input
-                  label="Bright Data API Key"
-                  type="password"
-                  placeholder="************"
-                  {...register("brightDataApiKey")}
-                  error={errors.brightDataApiKey?.message}
-                />
-              </div>
-              <Button
-                type="button"
-                variant="secondary"
-                size="sm"
-                onClick={(e) => {
-                  const form = e.currentTarget.form;
-                  const input = form?.elements.namedItem(
-                    "brightDataApiKey",
-                  ) as HTMLInputElement;
-                  if (input)
-                    handleSaveIndividual("brightDataApiKey", input.value);
-                }}
-              >
-                <Save className="mr-1 h-3 w-3" />
-                Save
-              </Button>
-            </div>
-
             {/* Senso */}
             <div className="flex items-end space-x-3">
               <div className="flex-1">

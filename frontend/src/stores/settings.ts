@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface ApiKeys {
-  brightData?: string;
   senso?: string;
   nodezero?: string;
 }
