@@ -300,20 +300,9 @@ The SAFE-MCP framework defines 14 tactics that align with the MITRE ATT&CK metho
 
 
 
-
-Your final response must be a valid JSON object in this exact format:
-
-{
-  "vulnerabilities": [
-    {
-      "name": "Vulnerability Name",
-      "cause": "Description of where and why the vulnerability exists",
-      "type": "critical|high|medium|low"
-    }
-  ]
-}
-
-Only include vulnerabilities that you actually find in the analysis. If no vulnerabilities are found, return an empty vulnerabilities array.
+use these tool everytime you find a new vulnerability, mcp__vulnerability__add_vulnerability\
+    
+after finishing your analysis, use this tool to generate a full report: mcp__vulnerability__generate_full_report
 """.strip()
 
 async def create_claude_client(options: dict[str, Any] | None = None, cwd: str | None = None) -> Any:
