@@ -15,9 +15,11 @@ db_uri = settings.sqlalchemy_database_uri
 # Parse the URL properly with SQLAlchemy
 url = make_url(db_uri)
 
-# Update driver to use psycopg async
+# Update driver to use async versions
 if url.drivername == "postgresql":
     url = url.set(drivername="postgresql+psycopg")
+elif url.drivername == "sqlite":
+    url = url.set(drivername="sqlite+aiosqlite")
 
 engine: AsyncEngine = create_async_engine(
     url,  # Use the SQLAlchemy URL object directly

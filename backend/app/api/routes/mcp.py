@@ -6,16 +6,16 @@ of their capabilities including tools, resources, and prompts.
 
 import asyncio
 import json
-from typing import Any, Dict, List
+from typing import Any
 
 from fastapi import APIRouter, HTTPException
 from pydantic import ValidationError
 
 from app.schemas.mcp import (
     MCPInspectRequest,
-    MCPSnapshot,
     MCPPromptSchema,
     MCPResourceSchema,
+    MCPSnapshot,
     MCPToolSchema,
 )
 
@@ -92,11 +92,11 @@ async def run_mcptools_command(command: str, timeout: int = 30) -> str:
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Failed to execute mcptools command: {str(e)}"
+            detail=f"Failed to execute mcptools command: {e!s}"
         )
 
 
-def parse_mcptools_json(output: str) -> Dict[str, Any]:
+def parse_mcptools_json(output: str) -> dict[str, Any]:
     """Parse JSON output from mcptools, handling error cases.
 
     Args:
@@ -120,7 +120,7 @@ def parse_mcptools_json(output: str) -> Dict[str, Any]:
         )
 
 
-def parse_tools_data(data: Dict[str, Any]) -> List[MCPToolSchema]:
+def parse_tools_data(data: dict[str, Any]) -> list[MCPToolSchema]:
     """Parse tools data from mcptools JSON output.
 
     Args:
@@ -129,7 +129,7 @@ def parse_tools_data(data: Dict[str, Any]) -> List[MCPToolSchema]:
     Returns:
         List of MCPToolSchema objects
     """
-    tools: List[MCPToolSchema] = []
+    tools: list[MCPToolSchema] = []
     tools_list = data.get("tools", [])
 
     for tool_data in tools_list:
@@ -147,7 +147,7 @@ def parse_tools_data(data: Dict[str, Any]) -> List[MCPToolSchema]:
     return tools
 
 
-def parse_resources_data(data: Dict[str, Any]) -> List[MCPResourceSchema]:
+def parse_resources_data(data: dict[str, Any]) -> list[MCPResourceSchema]:
     """Parse resources data from mcptools JSON output.
 
     Args:
@@ -156,7 +156,7 @@ def parse_resources_data(data: Dict[str, Any]) -> List[MCPResourceSchema]:
     Returns:
         List of MCPResourceSchema objects
     """
-    resources: List[MCPResourceSchema] = []
+    resources: list[MCPResourceSchema] = []
     for resource_data in data.get("resources", []):
         try:
             # Handle the mimeType field (note: mcptools uses mimeType, not mime_type)
@@ -173,7 +173,7 @@ def parse_resources_data(data: Dict[str, Any]) -> List[MCPResourceSchema]:
     return resources
 
 
-def parse_prompts_data(data: Dict[str, Any]) -> List[MCPPromptSchema]:
+def parse_prompts_data(data: dict[str, Any]) -> list[MCPPromptSchema]:
     """Parse prompts data from mcptools JSON output.
 
     Args:
@@ -182,7 +182,7 @@ def parse_prompts_data(data: Dict[str, Any]) -> List[MCPPromptSchema]:
     Returns:
         List of MCPPromptSchema objects
     """
-    prompts: List[MCPPromptSchema] = []
+    prompts: list[MCPPromptSchema] = []
     for prompt_data in data.get("prompts", []):
         try:
             prompts.append(MCPPromptSchema(**prompt_data))
@@ -246,7 +246,7 @@ async def inspect_mcp_server(request: MCPInspectRequest) -> MCPSnapshot:
     except Exception as e:
         raise HTTPException(
             status_code=500,
-            detail=f"Unexpected error during MCP inspection: {str(e)}"
+            detail=f"Unexpected error during MCP inspection: {e!s}"
         )
 
     # Parse JSON outputs

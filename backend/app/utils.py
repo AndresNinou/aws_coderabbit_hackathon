@@ -321,7 +321,6 @@ async def create_claude_client(options: dict[str, Any] | None = None, cwd: str |
 
     Args:
         options: Optional configuration options for the Claude client
-        cwd: Working directory for Claude operations
 
     Returns:
         Configured ClaudeSDKClient instance
@@ -466,7 +465,7 @@ async def query_claude_stream(prompt: str, options: dict[str, Any] | None = None
         # Update session data after streaming completes
         if session_id and db_session:
             try:
-                from app.crud import get_claude_session, update_claude_session, ClaudeSessionUpdate
+                from app.crud import ClaudeSessionUpdate, get_claude_session, update_claude_session
 
                 # Get the existing session from database
                 existing_session = await get_claude_session(session=db_session, session_id=session_id)

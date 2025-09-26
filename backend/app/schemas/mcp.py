@@ -3,7 +3,7 @@
 This module defines the data models for MCP server inspection and snapshot responses.
 """
 
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from pydantic import BaseModel, Field, model_validator
 
@@ -12,8 +12,8 @@ class MCPToolSchema(BaseModel):
     """Schema definition for an MCP tool."""
 
     name: str
-    description: Optional[str] = None
-    input_schema: Dict[str, Any] = Field(alias="inputSchema")  # JSON Schema for tool parameters
+    description: str | None = None
+    input_schema: dict[str, Any] = Field(alias="inputSchema")  # JSON Schema for tool parameters
 
 
 class MCPResourceSchema(BaseModel):
@@ -21,34 +21,34 @@ class MCPResourceSchema(BaseModel):
 
     uri: str
     name: str
-    description: Optional[str] = None
-    mime_type: Optional[str] = Field(default=None, alias="mimeType")
+    description: str | None = None
+    mime_type: str | None = Field(default=None, alias="mimeType")
 
 
 class MCPPromptSchema(BaseModel):
     """Schema definition for an MCP prompt."""
 
     name: str
-    description: Optional[str] = None
-    arguments: Optional[List[Dict[str, Any]]] = None
+    description: str | None = None
+    arguments: list[dict[str, Any]] | None = None
 
 
 class MCPSnapshot(BaseModel):
     """Complete snapshot of MCP server capabilities."""
 
-    tools: List[MCPToolSchema]
-    resources: List[MCPResourceSchema]
-    prompts: List[MCPPromptSchema]
-    server_info: Optional[Dict[str, Any]] = None
+    tools: list[MCPToolSchema]
+    resources: list[MCPResourceSchema]
+    prompts: list[MCPPromptSchema]
+    server_info: dict[str, Any] | None = None
     transport_type: str  # "http", "sse", "stdio"
 
 
 class MCPInspectRequest(BaseModel):
     """Request model for MCP inspection."""
 
-    url: Optional[str] = None  # For remote MCP servers
-    command: Optional[str] = None  # For local MCP setup commands
-    timeout: Optional[int] = 30  # Timeout in seconds
+    url: str | None = None  # For remote MCP servers
+    command: str | None = None  # For local MCP setup commands
+    timeout: int | None = 30  # Timeout in seconds
 
     @model_validator(mode='after')
     def validate_request(self) -> 'MCPInspectRequest':

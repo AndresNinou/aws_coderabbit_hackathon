@@ -2,6 +2,7 @@
 
 Provides settings management for the FastAPI backend application using Pydantic.
 Manages environment variables, database connections, and other configuration settings.
+
 """
 
 import secrets
@@ -18,6 +19,9 @@ from pydantic import (
 )
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+# Load environment variables from .env file
+from dotenv import load_dotenv
+load_dotenv()
 # Python 3.10 compatibility - Self was introduced in Python 3.11
 # Placed after imports to avoid circular import issues
 SettingsType = TypeVar("SettingsType", bound="Settings")
@@ -111,8 +115,9 @@ class Settings(BaseSettings):
         is_test = "pytest" in sys.modules or "test" in sys.argv[0].lower()
 
         if db_url.startswith("sqlite"):
-            if not is_test:
-                raise ValueError("SQLite database URLs are only permitted for testing")
+            # Allow SQLite in test environments or local development
+            if not is_test and self.ENVIRONMENT != "local":
+                raise ValueError("SQLite database URLs are only permitted for testing or local development")
             return db_url
 
         if not db_url.startswith("postgresql"):
