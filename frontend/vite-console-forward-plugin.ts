@@ -105,16 +105,27 @@ function createLogEntry(level, args) {
 
   const message = args.map((arg) => {
     if (arg === undefined) return "undefined";
+    if (arg === null) return "null";
     if (typeof arg === "string") return arg;
-    if (arg instanceof Error || typeof arg.stack === "string") {
-      let stringifiedError = arg.toString();
-      if (arg.stack) {
-        let stack = arg.stack.toString();
-        if (stack.startsWith(stringifiedError)) {
-          stack = stack.slice(stringifiedError.length).trimStart();
-        }
-        if (stack) {
-          stacks.push(stack);
+    if (arg instanceof Error || (arg && typeof arg.stack === "string")) {
+      let stringifiedError;
+      try {
+        stringifiedError = arg.toString();
+      } catch {
+        stringifiedError = "[Error object]";
+      }
+      
+      if (arg.stack && typeof arg.stack === "string") {
+        try {
+          let stack = arg.stack.toString();
+          if (stack.startsWith(stringifiedError)) {
+            stack = stack.slice(stringifiedError.length).trimStart();
+          }
+          if (stack) {
+            stacks.push(stack);
+          }
+        } catch {
+          // Ignore stack processing errors
         }
       }
       return stringifiedError;

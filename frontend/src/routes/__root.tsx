@@ -6,6 +6,7 @@ import {
 } from "@tanstack/react-router";
 import { Toaster } from "react-hot-toast";
 import { TRPCReactProvider } from "~/trpc/react";
+import { ErrorBoundary } from "~/components/ErrorBoundary";
 
 export const Route = createRootRoute({
   component: RootComponent,
@@ -106,7 +107,9 @@ function RootComponent() {
               </div>
             </div>
           )}
-          <Outlet />
+          <ErrorBoundary>
+            <Outlet />
+          </ErrorBoundary>
         </main>
 
         {/* Toast Notifications */}

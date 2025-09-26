@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 export const Route = createFileRoute("/runs/$runId/")({
   validateSearch: z.object({
     target: z.string().optional(),
-    type: z.enum(["url", "github"]).optional(),
+    type: z.enum(["url", "github", "command"]).optional(),
     fix: z.string().optional(),
   }),
   component: RunProgress,

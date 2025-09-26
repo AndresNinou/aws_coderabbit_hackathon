@@ -15,7 +15,7 @@ import toast from "react-hot-toast";
 
 const scanFormSchema = z.object({
   target: z.string().min(1, "Target is required"),
-  targetType: z.enum(["url", "github"]),
+  targetType: z.enum(["url", "github", "command"]),
 });
 
 type ScanFormData = z.infer<typeof scanFormSchema>;
@@ -88,7 +88,7 @@ function NewScan() {
             <div>
               <Input
                 label="Target"
-                placeholder="https://mcp.example.com or github.com/org/repo"
+                placeholder="https://mcp.example.com, github.com/org/repo, or npx mcp-server-command"
                 {...register("target")}
                 error={errors.target?.message}
               />
@@ -100,7 +100,7 @@ function NewScan() {
                 <legend className="text-sm font-medium text-text-primary">
                   Target Type
                 </legend>
-                <div className="flex space-x-6">
+                <div className="flex flex-wrap gap-6">
                   <label className="flex items-center space-x-2">
                     <input
                       type="radio"
@@ -118,6 +118,15 @@ function NewScan() {
                       className="h-4 w-4 border-stroke bg-bg-base text-accent-gold focus:ring-accent-mint focus:ring-offset-bg-base"
                     />
                     <span className="text-text-primary">GitHub Repo</span>
+                  </label>
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      value="command"
+                      {...register("targetType")}
+                      className="h-4 w-4 border-stroke bg-bg-base text-accent-gold focus:ring-accent-mint focus:ring-offset-bg-base"
+                    />
+                    <span className="text-text-primary">Command</span>
                   </label>
                 </div>
               </fieldset>
