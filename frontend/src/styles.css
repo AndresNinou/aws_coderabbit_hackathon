@@ -1,0 +1,226 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&family=Inter+Tight:wght@600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  * {
+    @apply border-stroke;
+  }
+
+  body {
+    @apply bg-bg-base font-body text-text-primary;
+    @apply leading-body;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-heading font-semibold leading-heading;
+  }
+
+  code,
+  pre {
+    @apply font-mono leading-code;
+  }
+}
+
+@layer components {
+  .seam-loader {
+    @apply relative overflow-hidden;
+  }
+
+  .seam-loader::after {
+    content: "";
+    @apply absolute inset-y-0 w-1/4 bg-grad-loader;
+    animation: seam-sweep 2s ease-out infinite;
+  }
+
+  .scanning-effect {
+    @apply relative overflow-hidden;
+  }
+
+  .scanning-effect::before {
+    content: "";
+    @apply absolute inset-0 bg-gradient-to-r from-transparent via-accent-mint/20 to-transparent;
+    animation: scan-line 3s ease-in-out infinite;
+  }
+
+  .technique-checking {
+    @apply relative;
+  }
+
+  .technique-checking::after {
+    content: "";
+    @apply absolute -inset-1 rounded-input bg-gradient-to-r from-accent-gold/20 via-accent-mint/20 to-accent-gold/20;
+    animation: technique-check 1.5s ease-in-out infinite;
+    z-index: -1;
+  }
+
+  .vulnerability-alert {
+    animation: vulnerability-found 0.5s ease-out;
+  }
+
+  .analysis-active {
+    animation: analysis-pulse 2s ease-in-out infinite;
+  }
+
+  .focus-ring {
+    @apply outline-none ring-2 ring-accent-mint ring-offset-2 ring-offset-bg-base;
+  }
+
+  .gradient-text {
+    @apply bg-grad-cta bg-clip-text text-transparent;
+  }
+
+  /* Line clamp utility for technique descriptions */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Enhanced scrollbar for analysis logs */
+  .analysis-logs::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .analysis-logs::-webkit-scrollbar-track {
+    @apply rounded-full bg-bg-base;
+  }
+
+  .analysis-logs::-webkit-scrollbar-thumb {
+    @apply rounded-full bg-accent-gold/30;
+  }
+
+  .analysis-logs::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent-gold/50;
+  }
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-bg-base;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply rounded-full bg-stroke;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-accent-gold;
+}
+
+/* Keyframe animations */
+@keyframes seam-sweep {
+  0% {
+    left: -25%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+@keyframes scan-line {
+  0%,
+  100% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes technique-check {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes vulnerability-found {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes analysis-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Hermetiq-specific animations */
+@keyframes wipe-to-clean {
+  0% {
+    background: linear-gradient(
+      to right,
+      rgba(239, 68, 68, 0.1) 0%,
+      rgba(239, 68, 68, 0.1) 50%,
+      transparent 50%
+    );
+  }
+  50% {
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(239, 68, 68, 0.1) 50%,
+      rgba(239, 68, 68, 0.1) 100%
+    );
+  }
+  100% {
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(34, 197, 94, 0.1) 100%
+    );
+  }
+}
+
+@keyframes mint-pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgba(32, 210, 181, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(32, 210, 181, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(32, 210, 181, 0);
+  }
+}
+
+.wipe-to-clean {
+  animation: wipe-to-clean 1.5s ease-out;
+}
+
+.mint-pulse-ring {
+  animation: mint-pulse-ring 0.6s ease-out;
+}
