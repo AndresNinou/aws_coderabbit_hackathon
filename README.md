@@ -45,11 +45,17 @@ Hermetiq is a comprehensive web application security scanner that performs autom
 - **Real-time**: Server-Sent Events for live updates
 
 ### Backend (FastAPI/Python)
-- **Framework**: FastAPI for high-performance APIs
-- **Database**: PostgreSQL with Prisma ORM
-- **Authentication**: Clerk for user management
-- **Security Tools**: Integration with multiple security scanning tools
-- **Background Jobs**: Asynchronous task processing
+- **Framework**: FastAPI for high-performance, async APIs
+- **Language**: Python 3.10+ with full type safety
+- **Database**: PostgreSQL with SQLModel and Pydantic
+- **Authentication**: Clerk for secure user management
+- **Security Tools**: Claude Code SDK for AI-powered security analysis
+- **GitHub Integration**: PyGitHub for repository scanning and analysis
+- **Background Jobs**: Async task processing with proper error handling
+- **Testing**: Comprehensive test suite with pytest and pytest-asyncio
+- **Code Quality**: Ruff for fast linting and formatting, Pyright for type checking
+- **Logging**: Structured logging with Loguru
+- **Security**: Input validation, rate limiting, and secure data handling
 
 ### Infrastructure
 - **Monorepo**: Turborepo with pnpm for efficient package management
